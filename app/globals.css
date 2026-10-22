@@ -1,26 +1,77 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --clr-bg: #faf8f5;
+  --clr-bg-elevated: #f4efe9;
+  --clr-surface-white: #ffffff;
+  --clr-surface-card: #f4efe9;
+  --clr-text: #1e252b;
+  --clr-text-secondary: #4b5563;
+  --clr-text-muted: #6b7280;
+  --clr-primary: #a6522c;
+  --clr-primary-hover: #8d4322;
+  --clr-primary-text: #faf8f5;
+  --clr-border: #e8e2dc;
+  --clr-border-subtle: #f0ece7;
+
+  --clr-status-stable-bg: #ecfdf5;
+  --clr-status-stable-text: #065f46;
+  --clr-status-danger-bg: #fff7ed;
+  --clr-status-danger-text: #a6522c;
+  --clr-status-vuln-bg: #f1f5f9;
+  --clr-status-vuln-text: #475569;
+
+  --font-serif: "Libre Caslon Text", Georgia, serif;
+  --font-sans: "Hanken Grotesk", system-ui, sans-serif;
+
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4.5rem;
+
+  --radius: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-full: 9999px;
+
+  --transition: 200ms ease;
+  --max-w: 1280px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+html[data-theme="dark"],
+html.dark {
+  --clr-bg: #0f1317;
+  --clr-bg-elevated: #1a2028;
+  --clr-surface-white: #1e262e;
+  --clr-surface-card: #1e262e;
+  --clr-text: #eef2f7;
+  --clr-text-secondary: #a0aec0;
+  --clr-text-muted: #718096;
+  --clr-primary: #ffb597;
+  --clr-primary-hover: #ffa07a;
+  --clr-primary-text: #1e252b;
+  --clr-border: #2d3748;
+  --clr-border-subtle: #232b35;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --clr-status-stable-bg: #064e3b;
+  --clr-status-stable-text: #6ee7b7;
+  --clr-status-danger-bg: #431407;
+  --clr-status-danger-text: #ffb597;
+  --clr-status-vuln-bg: #1e293b;
+  --clr-status-vuln-text: #94a3b8;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--clr-bg);
+  color: var(--clr-text);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
