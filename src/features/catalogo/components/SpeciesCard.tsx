@@ -3,6 +3,10 @@ import Link from "next/link";
 import type { Species } from "../domain/species";
 
 export default function SpeciesCard({ species }: { species: Species }) {
+  const linkLabel =
+    species.catalogLinkLabel ??
+    `ver ejemplares de ${species.usualName.toLowerCase()}`;
+
   return (
     <article className="group flex flex-col gap-[var(--space-sm)] rounded-[var(--radius-2xl)] border border-[var(--clr-border)] bg-[color-mix(in_srgb,var(--clr-bg)_60%,var(--clr-surface-card))] p-[var(--space-lg)] transition-[border-color,background] duration-300 ease-in-out hover:border-[var(--clr-text-muted)]">
       <header>
@@ -38,7 +42,7 @@ export default function SpeciesCard({ species }: { species: Species }) {
           href="/catalogo"
           className="inline-block border-t border-[var(--clr-border)] pt-[var(--space-sm)] text-[0.78rem] font-medium text-[var(--clr-primary)] [transition:opacity_var(--transition)] hover:underline hover:opacity-75"
         >
-          {species.catalogLinkLabel}
+          {linkLabel}
         </Link>
       </div>
     </article>
@@ -57,4 +61,3 @@ function DataRow({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
-

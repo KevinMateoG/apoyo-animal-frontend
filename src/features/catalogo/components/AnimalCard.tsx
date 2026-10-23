@@ -8,7 +8,7 @@ export default function AnimalCard({ animal }: { animal: Animal }) {
       <div>
         <header className="relative aspect-[4/3] overflow-hidden bg-[var(--clr-bg-elevated)]">
           <Image
-            src={getAnimalImage(animal.typeAnimal)}
+            src={getAnimalImage(animal)}
             alt={animal.typeAnimal}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
@@ -42,4 +42,3 @@ export default function AnimalCard({ animal }: { animal: Animal }) {
     </article>
   );
 }
-

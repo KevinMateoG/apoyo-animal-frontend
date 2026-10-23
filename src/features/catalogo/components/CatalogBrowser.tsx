@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { ANIMAL_FILTERS, type Animal } from "../domain/animal";
+import type { Animal } from "../domain/animal";
 import { useAnimalFilter } from "../hooks/useAnimalFilter";
 import AnimalCard from "./AnimalCard";
 
@@ -14,7 +14,8 @@ export default function CatalogBrowser({
   animals,
   children,
 }: CatalogBrowserProps) {
-  const { filter, setFilter, visibleAnimals } = useAnimalFilter(animals);
+  const { filter, setFilter, filters, visibleAnimals } =
+    useAnimalFilter(animals);
 
   return (
     <>
@@ -27,7 +28,7 @@ export default function CatalogBrowser({
             aria-label="Filtrar por especie"
             className="flex flex-wrap gap-[var(--space-xs)]"
           >
-            {ANIMAL_FILTERS.map(({ value, label }) => {
+            {filters.map(({ value, label }) => {
               const isActive = filter === value;
               return (
                 <button
@@ -59,4 +60,3 @@ export default function CatalogBrowser({
     </>
   );
 }
-

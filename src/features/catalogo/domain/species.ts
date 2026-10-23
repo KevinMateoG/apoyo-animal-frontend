@@ -7,6 +7,5 @@ export interface Species {
   dataHabitat: string;
   dataDiet: string;
   imageUrl: string;
-  catalogLinkLabel: string;
+  catalogLinkLabel?: string;
 }
-
