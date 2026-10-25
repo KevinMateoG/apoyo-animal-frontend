@@ -1,22 +1,55 @@
 import { API_BASE_URL } from "./config";
 
 const TOKEN_KEY = "cs-token";
+const USER_KEY = "cs-user";
 
 export const tokenStorage = {
   get: (): string | null =>
     typeof window === "undefined" ? null : localStorage.getItem(TOKEN_KEY),
-  set: (token: string) => localStorage.setItem(TOKEN_KEY, token),
-  clear: () => localStorage.removeItem(TOKEN_KEY),
+  set: (token: string) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(TOKEN_KEY, token);
+    }
+  },
+  clear: () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+    }
+  },
+};
+
+export const userStorage = {
+  get: <T>(): T | null => {
+    if (typeof window === "undefined") return null;
+    const raw = localStorage.getItem(USER_KEY);
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw) as T;
+    } catch {
+      return null;
+    }
+  },
+  set: <T>(user: T) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
+    }
+  },
 };
 
 export class HttpError extends Error {
+  readonly status: number;
+  readonly details?: Record<string, string[]>;
+
   constructor(
-    public readonly status: number,
+    status: number,
     message: string,
-    public readonly details?: unknown,
+    details?: Record<string, string[]>,
   ) {
     super(message);
     this.name = "HttpError";
+    this.status = status;
+    this.details = details;
   }
 }
 
@@ -29,17 +62,27 @@ export function setUnauthorizedHandler(handler: (() => void) | null) {
 interface RequestOptions extends Omit<RequestInit, "body" | "headers"> {
   body?: unknown;
   headers?: Record<string, string>;
+  skipAuthRedirect?: boolean;
 }
 
 interface ApiErrorBody {
   message?: string;
-  error?: { code?: string; message?: string; details?: unknown };
+  error?: {
+    code?: string;
+    message?: string;
+    details?: Record<string, string[]>;
+  };
 }
 
-/** Envía cookies de sesión (`credentials: "include"`) para Better Auth y adjunta Bearer token si existe. */
 export async function http<T>(
   path: string,
-  { body, headers, credentials = "include", ...init }: RequestOptions = {},
+  {
+    body,
+    headers,
+    credentials = "include",
+    skipAuthRedirect = false,
+    ...init
+  }: RequestOptions = {},
 ): Promise<T> {
   const token = tokenStorage.get();
 
@@ -54,7 +97,7 @@ export async function http<T>(
     body: body === undefined ? undefined : JSON.stringify(body),
   });
 
-  if (response.status === 401) {
+  if (response.status === 401 && !skipAuthRedirect) {
     tokenStorage.clear();
     unauthorizedHandler?.();
   }

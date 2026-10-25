@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/src/features/auth/hooks/useAuth";
 import { useTheme } from "../hooks/useTheme";
 import { ButtonLink } from "./Button";
 
@@ -15,6 +16,7 @@ const NAV_LINKS = [
 export default function NavBar() {
   const pathname = usePathname();
   const { toggleTheme } = useTheme();
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--clr-border)] bg-[color-mix(in_srgb,var(--clr-bg)_88%,transparent)] backdrop-blur-[12px] transition-[background-color,border-color] duration-300 ease-in-out">
@@ -52,6 +54,32 @@ export default function NavBar() {
           );
         })}
 
+        {isAuthenticated && (
+          <Link
+            href="/mis-apadrinamientos"
+            className={`whitespace-nowrap text-[0.9rem] [transition:color_var(--transition)] hover:text-[var(--clr-text)] max-[640px]:order-3 max-[640px]:px-[var(--space-xs)] max-[640px]:text-[0.85rem] ${
+              pathname === "/mis-apadrinamientos"
+                ? "font-medium text-[var(--clr-primary-hover)]"
+                : "text-[var(--clr-text-muted)]"
+            }`}
+          >
+            Mis apadrinamientos
+          </Link>
+        )}
+
+        {isAdmin && (
+          <Link
+            href="/admin"
+            className={`whitespace-nowrap text-[0.9rem] [transition:color_var(--transition)] hover:text-[var(--clr-text)] max-[640px]:order-3 max-[640px]:px-[var(--space-xs)] max-[640px]:text-[0.85rem] ${
+              pathname === "/admin"
+                ? "font-medium text-[var(--clr-primary-hover)]"
+                : "text-[var(--clr-text-muted)]"
+            }`}
+          >
+            Administración
+          </Link>
+        )}
+
         <div className="ml-auto flex items-center gap-[var(--space-sm)] max-[640px]:order-1 max-[640px]:ml-0">
           <button
             type="button"
@@ -64,8 +92,21 @@ export default function NavBar() {
             <span className="hidden dark:inline">🌙</span>
           </button>
 
-          {pathname !== "/apadrinar" && (
-            <ButtonLink href="/catalogo">Apadrinar</ButtonLink>
+          {isAuthenticated && user ? (
+            <div className="flex items-center gap-[var(--space-xs)]">
+              <span className="hidden text-[0.82rem] font-medium text-[var(--clr-text)] sm:inline">
+                {user.name}
+              </span>
+              <button
+                type="button"
+                onClick={logout}
+                className="cursor-pointer rounded-[var(--radius)] border border-[var(--clr-border)] px-3 py-1.5 text-[0.8rem] font-medium text-[var(--clr-text-secondary)] [transition:border-color_var(--transition),color_var(--transition)] hover:border-[var(--clr-text-secondary)] hover:text-[var(--clr-text)]"
+              >
+                Salir
+              </button>
+            </div>
+          ) : (
+            <ButtonLink href="/login">Ingresar</ButtonLink>
           )}
         </div>
       </nav>
