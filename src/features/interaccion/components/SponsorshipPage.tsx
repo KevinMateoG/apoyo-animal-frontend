@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import type { Animal } from "@/src/features/catalogo/domain/animal";
+import { getAnimals } from "@/src/features/catalogo/services/animal.service";
 import {
   HeroDescription,
   HeroTitle,
@@ -6,10 +11,25 @@ import {
   SectionTitle,
 } from "@/src/features/common/components/Headings";
 import SiteFooter from "@/src/features/common/components/SiteFooter";
-import type { Animal } from "@/src/features/catalogo/domain/animal";
 import SponsorshipForm from "./SponsorshipForm";
 
-export default function SponsorshipPage({ animals }: { animals: Animal[] }) {
+export default function SponsorshipPage() {
+  const [animals, setAnimals] = useState<Animal[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    getAnimals()
+      .then((data) => {
+        if (active) setAnimals(data);
+      })
+      .catch(() => {
+        if (active) setAnimals([]);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <>
       <main className="grow">
@@ -48,4 +68,3 @@ export default function SponsorshipPage({ animals }: { animals: Animal[] }) {
     </>
   );
 }
-

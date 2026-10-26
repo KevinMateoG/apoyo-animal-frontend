@@ -1,5 +1,6 @@
 export type DonationType = "animal" | "general";
 export type DonationFrequency = "recurring" | "single";
+export type SponsorshipStatus = "PENDING" | "CONFIRMED" | "CANCELLED";
 
 export interface SponsorshipFormValues {
   donationType: DonationType;
@@ -15,7 +16,6 @@ export interface SponsorshipFormValues {
 export interface SponsorshipRequest {
   donationType: DonationType;
   animalId: string | null;
-  userId?: string | null;
   name: string;
   email: string;
   address: string;
@@ -23,8 +23,28 @@ export interface SponsorshipRequest {
   frequency: DonationFrequency;
 }
 
-export interface Sponsorship extends SponsorshipRequest {
+export interface SponsorshipRecord {
   id: string;
+  type: "ANIMAL" | "GENERAL";
+  frequency: "SINGLE" | "RECURRING";
+  status: SponsorshipStatus;
+  amount: number;
+  userId: string;
+  animalId: string | null;
+  donorName: string;
+  donorEmail: string;
+  donorAddress: string;
+  animal?: {
+    id: string;
+    name: string;
+    speciesId: string;
+    speciesCommonName?: string;
+  } | null;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
   createdAt: string;
 }
 
@@ -77,12 +97,10 @@ export function validateSponsorship(values: SponsorshipFormValues): string[] {
 
 export function toSponsorshipRequest(
   values: SponsorshipFormValues,
-  userId: string | null = null,
 ): SponsorshipRequest {
   return {
     donationType: values.donationType,
     animalId: values.donationType === "animal" ? values.animalId : null,
-    userId,
     name: values.name.trim(),
     email: values.email.trim(),
     address: values.address.trim(),

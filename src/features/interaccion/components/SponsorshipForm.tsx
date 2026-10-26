@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/src/features/common/components/Button";
-import Input from "@/src/features/common/components/Input";
 import type { Animal } from "@/src/features/catalogo/domain/animal";
+import { Button, ButtonLink } from "@/src/features/common/components/Button";
+import Input from "@/src/features/common/components/Input";
 import { useSponsorshipForm } from "../hooks/useSponsorshipForm";
 import AnimalPicker from "./AnimalPicker";
 import FormErrorBanner from "./FormErrorBanner";
@@ -16,10 +16,26 @@ export default function SponsorshipForm({ animals }: { animals: Animal[] }) {
     thankYouMessage,
     isSubmitting,
     handleSubmit,
+    isAuthenticated,
   } = useSponsorshipForm(animals);
 
   return (
     <>
+      {!isAuthenticated && (
+        <div className="mb-[var(--space-lg)] flex flex-wrap items-center justify-between gap-[var(--space-md)] rounded-[var(--radius-xl)] border border-[var(--clr-border)] bg-[var(--clr-bg)] p-[var(--space-lg)]">
+          <div>
+            <p className="font-medium text-[var(--clr-text)]">
+              Inicia sesión para registrar tu apadrinamiento
+            </p>
+            <p className="text-[0.82rem] text-[var(--clr-text-secondary)]">
+              Para asociar el aporte a tu cuenta y ver tu historial en &quot;Mis
+              apadrinamientos&quot;, necesitas tener una sesión activa.
+            </p>
+          </div>
+          <ButtonLink href="/login">Ingresar a mi cuenta</ButtonLink>
+        </div>
+      )}
+
       {errors.length > 0 && <FormErrorBanner errors={errors} />}
 
       <form
@@ -143,7 +159,7 @@ export default function SponsorshipForm({ animals }: { animals: Animal[] }) {
           disabled={isSubmitting}
           className="justify-center self-start max-[640px]:w-full"
         >
-          Continuar con mi donación
+          {isSubmitting ? "Registrando aporte..." : "Continuar con mi donación"}
         </Button>
       </form>
 
@@ -157,4 +173,3 @@ export default function SponsorshipForm({ animals }: { animals: Animal[] }) {
     </>
   );
 }
-
