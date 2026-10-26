@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Hanken_Grotesk, Libre_Caslon_Text } from "next/font/google";
+import { AuthProvider } from "@/src/features/auth/hooks/useAuth";
 import NavBar from "@/src/features/common/components/NavBar";
 import "./globals.css";
 
@@ -41,8 +42,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="flex min-h-screen flex-col">
-        <NavBar />
-        {children}
+        <AuthProvider>
+          <NavBar />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

@@ -1,3 +1,7 @@
+"use client";
+
+import SpeciesCard from "@/src/features/catalogo/components/SpeciesCard";
+import { useSpecies } from "@/src/features/catalogo/hooks/useSpecies";
 import { ButtonLink } from "@/src/features/common/components/Button";
 import {
   CtaBox,
@@ -12,10 +16,10 @@ import {
   SectionTitle,
 } from "@/src/features/common/components/Headings";
 import SiteFooter from "@/src/features/common/components/SiteFooter";
-import SpeciesCard from "@/src/features/catalogo/components/SpeciesCard";
-import type { Species } from "@/src/features/catalogo/domain/species";
 
-export default function HomePage({ species }: { species: Species[] }) {
+export default function HomePage() {
+  const { species, isLoading, error, reload } = useSpecies();
+
   return (
     <>
       <main className="grow">
@@ -48,10 +52,39 @@ export default function HomePage({ species }: { species: Species[] }) {
             </SectionSubtitle>
           </div>
 
-          <div className="mx-auto grid max-w-[var(--max-w)] grid-cols-1 gap-[var(--space-xl)] px-[var(--space-lg)] md:grid-cols-3">
-            {species.map((item) => (
-              <SpeciesCard key={item.id} species={item} />
-            ))}
+          <div className="mx-auto max-w-[var(--max-w)] px-[var(--space-lg)]">
+            {isLoading ? (
+              <div
+                role="status"
+                className="rounded-[var(--radius-xl)] border border-[var(--clr-border)] bg-[var(--clr-bg)] p-[var(--space-2xl)] text-center text-[0.9rem] text-[var(--clr-text-secondary)]"
+              >
+                Cargando especies representativas...
+              </div>
+            ) : error ? (
+              <div
+                role="alert"
+                className="flex flex-col items-center gap-[var(--space-md)] rounded-[var(--radius-xl)] border border-[#b91c1c]/40 bg-[#b91c1c]/10 p-[var(--space-2xl)] text-center text-[0.9rem] text-[#b91c1c]"
+              >
+                <p>{error}</p>
+                <button
+                  type="button"
+                  onClick={() => void reload()}
+                  className="cursor-pointer rounded-[var(--radius)] border border-[#b91c1c] px-4 py-2 text-[0.8rem] font-medium hover:bg-[#b91c1c]/10"
+                >
+                  Reintentar
+                </button>
+              </div>
+            ) : species.length === 0 ? (
+              <div className="rounded-[var(--radius-xl)] border border-[var(--clr-border)] bg-[var(--clr-bg)] p-[var(--space-2xl)] text-center text-[0.9rem] text-[var(--clr-text-secondary)]">
+                Aún no hay especies registradas.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-[var(--space-xl)] md:grid-cols-3">
+                {species.map((item) => (
+                  <SpeciesCard key={item.id} species={item} />
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
