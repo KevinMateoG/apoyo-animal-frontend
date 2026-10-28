@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import {
   CtaBox,
   CtaDescription,
@@ -9,23 +10,30 @@ import {
   SectionEyebrow,
 } from "@/src/features/common/components/Headings";
 import SiteFooter from "@/src/features/common/components/SiteFooter";
-import type { Animal } from "../domain/animal";
 import CatalogBrowser from "./CatalogBrowser";
 
-export default function CatalogPage({ animals }: { animals: Animal[] }) {
+export default function CatalogPage() {
   return (
     <>
       <main className="grow">
-        <CatalogBrowser animals={animals}>
-          <SectionEyebrow>Custodia individualizada</SectionEyebrow>
-          <HeroTitle>Ejemplares residentes</HeroTitle>
-          <HeroDescription>
-            Cada individuo cuenta con una pauta biomédica y seguimiento
-            nutricional personalizado. Al apadrinar con nombre propio, solventas
-            de forma directa su estancia, enriquecimiento ambiental y medicina
-            preventiva.
-          </HeroDescription>
-        </CatalogBrowser>
+        <Suspense
+          fallback={
+            <div className="mx-auto max-w-[var(--max-w)] px-[var(--space-lg)] py-[var(--space-3xl)] text-[0.9rem] text-[var(--clr-text-secondary)]">
+              Cargando catálogo...
+            </div>
+          }
+        >
+          <CatalogBrowser>
+            <SectionEyebrow>Custodia individualizada</SectionEyebrow>
+            <HeroTitle>Ejemplares residentes</HeroTitle>
+            <HeroDescription>
+              Cada individuo cuenta con una pauta biomédica y seguimiento
+              nutricional personalizado. Al apadrinar con nombre propio,
+              solventas de forma directa su estancia, enriquecimiento ambiental
+              y medicina preventiva.
+            </HeroDescription>
+          </CatalogBrowser>
+        </Suspense>
 
         <section className="mx-auto max-w-[var(--max-w)] px-[var(--space-lg)] pb-[var(--space-2xl)] pt-[var(--space-xl)]">
           <CtaBox>
@@ -52,4 +60,3 @@ export default function CatalogPage({ animals }: { animals: Animal[] }) {
     </>
   );
 }
-

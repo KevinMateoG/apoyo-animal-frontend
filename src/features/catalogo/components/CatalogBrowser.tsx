@@ -1,21 +1,26 @@
 "use client";
 
 import type { ReactNode } from "react";
-import type { Animal } from "../domain/animal";
+import Pagination from "@/src/features/common/components/Pagination";
 import { useAnimalFilter } from "../hooks/useAnimalFilter";
 import AnimalCard from "./AnimalCard";
 
 interface CatalogBrowserProps {
-  animals: Animal[];
   children: ReactNode;
 }
 
-export default function CatalogBrowser({
-  animals,
-  children,
-}: CatalogBrowserProps) {
-  const { filter, setFilter, filters, visibleAnimals } =
-    useAnimalFilter(animals);
+export default function CatalogBrowser({ children }: CatalogBrowserProps) {
+  const {
+    filter,
+    setFilter,
+    filters,
+    visibleAnimals,
+    pagination,
+    setPage,
+    isLoading,
+    error,
+    reload,
+  } = useAnimalFilter();
 
   return (
     <>
@@ -50,12 +55,48 @@ export default function CatalogBrowser({
         </div>
       </section>
 
-      <section>
-        <div className="mx-auto grid max-w-[var(--max-w)] grid-cols-1 gap-[var(--space-xl)] px-[var(--space-lg)] sm:grid-cols-2 lg:grid-cols-3">
-          {visibleAnimals.map((animal) => (
-            <AnimalCard key={animal.id} animal={animal} />
-          ))}
-        </div>
+      <section className="mx-auto max-w-[var(--max-w)] px-[var(--space-lg)] pt-[var(--space-xl)]">
+        {isLoading ? (
+          <div
+            role="status"
+            className="rounded-[var(--radius-xl)] border border-[var(--clr-border)] bg-[var(--clr-surface-white)] p-[var(--space-2xl)] text-center text-[0.9rem] text-[var(--clr-text-secondary)]"
+          >
+            Cargando ejemplares desde la reserva...
+          </div>
+        ) : error ? (
+          <div
+            role="alert"
+            className="flex flex-col items-center gap-[var(--space-md)] rounded-[var(--radius-xl)] border border-[#b91c1c]/40 bg-[#b91c1c]/10 p-[var(--space-2xl)] text-center text-[0.9rem] text-[#b91c1c]"
+          >
+            <p>{error}</p>
+            <button
+              type="button"
+              onClick={() => void reload()}
+              className="cursor-pointer rounded-[var(--radius)] border border-[#b91c1c] px-4 py-2 text-[0.8rem] font-medium hover:bg-[#b91c1c]/10"
+            >
+              Reintentar
+            </button>
+          </div>
+        ) : visibleAnimals.length === 0 ? (
+          <div className="rounded-[var(--radius-xl)] border border-[var(--clr-border)] bg-[var(--clr-surface-white)] p-[var(--space-2xl)] text-center text-[0.9rem] text-[var(--clr-text-secondary)]">
+            No se encontraron ejemplares disponibles para este filtro.
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 gap-[var(--space-xl)] sm:grid-cols-2 lg:grid-cols-3">
+              {visibleAnimals.map((animal) => (
+                <AnimalCard key={animal.id} animal={animal} />
+              ))}
+            </div>
+
+            <Pagination
+              page={pagination.page}
+              totalPages={pagination.totalPages}
+              totalItems={pagination.totalItems}
+              onPageChange={setPage}
+            />
+          </>
+        )}
       </section>
     </>
   );
