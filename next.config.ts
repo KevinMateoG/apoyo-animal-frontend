@@ -15,6 +15,14 @@ const nextConfig: NextConfig = {
         hostname: "**.r2.cloudflarestorage.com",
       },
       {
+        protocol: "https",
+        hostname: "**.aws.neon.tech",
+      },
+      {
+        protocol: "https",
+        hostname: "**.vercel.app",
+      },
+      {
         protocol: "http",
         hostname: "localhost",
       },

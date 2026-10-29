@@ -354,7 +354,7 @@ export default function AdminPage() {
           <HeroTitle>Panel de administración</HeroTitle>
           <HeroDescription>
             Crea, edita o elimina ejemplares y especies del catálogo subiendo
-            sus fotografías directamente a Cloudflare R2.
+            sus fotografías.
           </HeroDescription>
 
           <div className="mt-[var(--space-xl)] flex gap-[var(--space-sm)]">
@@ -736,7 +736,7 @@ export default function AdminPage() {
                   <div className="flex flex-wrap gap-[var(--space-sm)] pt-2">
                     <Button type="submit" disabled={isSavingSpecies}>
                       {isSavingSpecies
-                        ? "Subiendo a R2 y guardando..."
+                        ? "Subiendo y guardando..."
                         : editingSpeciesId
                           ? "Guardar especie"
                           : "Crear especie"}

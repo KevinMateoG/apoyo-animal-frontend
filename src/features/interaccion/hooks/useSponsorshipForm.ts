@@ -68,7 +68,12 @@ export function useSponsorshipForm(animals: Animal[]) {
       setValues(INITIAL_SPONSORSHIP_VALUES);
     } catch (error) {
       if (error instanceof HttpError) {
-        setErrors([error.message]);
+        const detailMessages = error.details
+          ? Object.values(error.details).flat()
+          : [];
+        setErrors(
+          detailMessages.length > 0 ? detailMessages : [error.message],
+        );
       } else {
         setErrors(["No pudimos registrar tu aporte. Inténtalo de nuevo."]);
       }

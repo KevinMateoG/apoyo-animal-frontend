@@ -3,6 +3,7 @@
 import type { Animal } from "@/src/features/catalogo/domain/animal";
 import { Button, ButtonLink } from "@/src/features/common/components/Button";
 import Input from "@/src/features/common/components/Input";
+import { MAX_SPONSORSHIP_AMOUNT } from "../domain/sponsorship";
 import { useSponsorshipForm } from "../hooks/useSponsorshipForm";
 import AnimalPicker from "./AnimalPicker";
 import FormErrorBanner from "./FormErrorBanner";
@@ -107,6 +108,7 @@ export default function SponsorshipForm({ animals }: { animals: Animal[] }) {
             label="Valor de tu aporte"
             type="number"
             min={1}
+            max={MAX_SPONSORSHIP_AMOUNT}
             step={1}
             placeholder="0"
             startAdornment="$"
