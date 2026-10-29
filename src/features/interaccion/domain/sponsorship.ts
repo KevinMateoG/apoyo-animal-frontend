@@ -60,6 +60,7 @@ export const INITIAL_SPONSORSHIP_VALUES: SponsorshipFormValues = {
 };
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const MAX_SPONSORSHIP_AMOUNT = 10_000_000;
 
 export function validateSponsorship(values: SponsorshipFormValues): string[] {
   const errors: string[] = [];
@@ -84,8 +85,12 @@ export function validateSponsorship(values: SponsorshipFormValues): string[] {
   }
 
   const amount = Number(values.amount);
-  if (!amount || amount < 1) {
+  if (!Number.isFinite(amount) || amount < 1) {
     errors.push("El valor del aporte debe ser un número mayor a 0.");
+  } else if (amount > MAX_SPONSORSHIP_AMOUNT) {
+    errors.push(
+      "El valor del aporte no puede superar los $10.000.000 COP.",
+    );
   }
 
   if (!values.consent) {
